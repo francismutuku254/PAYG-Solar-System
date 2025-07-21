@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title id="title">PAYG Solar | Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="img/image2.jpg" type="image/png">
+
+  <style>
+    :root {
+      --green: #4CAF50;
+      --dark: #333;
+      --light: #f4f4f4;
+      --text: #444;
+      --white: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--light);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: var(--green);
+      padding: 16px;
+      color: white;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 80px;
+      
+    }
+
+    header h2 {
+      flex-grow: 1;
+      text-align: center;
+    }
+
+    .language-select {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+    }
+
+    .language-select select {
+      padding: 6px;
+      border-radius: 4px;
+      border: none;
+      font-size: 14px;
+    }
+
+    .menu-toggle {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      font-size: 24px;
+      color: white;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: none;
+      z-index: 1100;
+    }
+
+    nav {
+      background-color: var(--dark);
+      color: white;
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding-top: 60px;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+
+    nav a {
+      color: white;
+      padding: 14px 20px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    nav a:hover {
+      background-color: #555;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 900;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    .hero h1 {
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      font-size: 1.1em;
+      color: #666;
+    }
+
+    .image-box {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+      padding: 0 10px;
+    }
+
+    .image-box img {
+      width: 100%;
+      max-width: 900px;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background-color: var(--dark);
+      color: white;
+      font-size: 13px;
+    }
+
+    @media (max-width: 800px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      .overlay.show {
+        display: block;
+      }
+
+      nav.show {
+        left: 0;
+      }
+
+      nav a {
+        border-top: 1px solid #444;
+      }
+    }
+
+    @media (min-width: 801px) {
+      nav {
+        position: static;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: center;
+        padding: 0;
+        left: 0 !important;
+        gap: 24px;
+      }
+
+      nav a {
+        border: none;
+        justify-content: center;
+        padding: 14px 24px;
+      }
+
+      .overlay {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="page-wrapper">
+    <header>
+      <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+      <h2 id="headerTitle">PAYG Solar System</h2>
+      <div class="language-select">
+        <select id="languageSelect">
+          <option value="en">EN</option>
+          <option value="sw">SW</option>
+        </select>
+      </div>
+    </header>
+
+    <div class="overlay" onclick="closeMenu()"></div>
+
+    <nav id="sidebar">
+      <a href="home.html">🏠 <span id="navHome">Home</span></a>
+      <a href="index.html">📊 <span id="navDashboard">Dashboard</span></a>
+      <a href="generate.html">🔑 <span id="navGenerate">Generate Token</span></a>
+      <a href="chart.html">📈 <span id="navChart">Power Chart</span></a>
+      <a href="about.html">ℹ️ <span id="navAbout">About & Contact</span></a>
+    </nav>
+
+    <section class="hero">
+      <h1 id="heroTitle">Powering the Future, One Token at a Time</h1>
+      <p id="heroDesc">This offline PAYG system allows users to buy and monitor solar energy without internet.</p>
+
+      <div class="image-box">
+        <img src="img/image1.png" alt="Solar Energy System" />
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer-text">
+    &copy; 2025 PAYG Solar. Designed for remote, offline usage.
+  </footer>
+
+  <script>
+    const translations = {
+      en: {
+        headerTitle: "PAYG Solar System",
+        navHome: "Home",
+        navDashboard: "Dashboard",
+        navGenerate: "Generate Token",
+        navChart: "Power Chart",
+        navAbout: "About & Contact",
+        heroTitle: "Powering the Future, One Token at a Time",
+        heroDesc: "This offline PAYG system allows users to buy and monitor solar energy without internet."
+        
+      },
+      sw: {
+        headerTitle: "Mfumo wa Jua wa PAYG",
+        navHome: "Nyumbani",
+        navDashboard: "Dashibodi",
+        navGenerate: "Tengeneza Token",
+        navChart: "Chati ya Umeme",
+        navAbout: "Kuhusu & Mawasiliano",
+        heroTitle: "Kuletea Nguvu Kesho, Tokeni Moja kwa Wakati",
+        heroDesc: "Mfumo huu wa PAYG hufanya kazi bila intaneti kwa ajili ya kufuatilia na kununua nishati ya jua."
+      }
+    };
+
+    function setLanguage(lang) {
+      const t = translations[lang];
+      for (const id in t) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = t[id];
+      }
+      localStorage.setItem("lang", lang);
+    }
+
+    document.getElementById("languageSelect").addEventListener("change", e => {
+      setLanguage(e.target.value);
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const lang = localStorage.getItem("lang") || "en";
+      document.getElementById("languageSelect").value = lang;
+      setLanguage(lang);
+    });
+
+    function toggleMenu() {
+      document.getElementById('sidebar').classList.toggle('show');
+      document.querySelector('.overlay').classList.toggle('show');
+    }
+
+    function closeMenu() {
+      document.getElementById('sidebar').classList.remove('show');
+      document.querySelector('.overlay').classList.remove('show');
+    }
+  </script>
+</body>
+</html>

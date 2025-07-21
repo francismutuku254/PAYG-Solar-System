@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PAYG Solar | About</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="img/image2.jpg" type="image/png">
+  <style>
+    :root {
+      --green: #4caf50;
+      --dark: #333;
+      --light: #f4f4f4;
+      --text: #555;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--light);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: var(--green);
+      padding: 16px;
+      text-align: center;
+      color: white;
+      position: relative;
+      height: 80px;
+      align-items: center;
+      justify-content: center;
+    }
+    header h2{
+      color: white;
+    }
+
+    .menu-toggle {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      font-size: 24px;
+      color: white;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: none;
+      z-index: 1100;
+    }
+
+    .language-selector {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+    }
+    .language-selector select {
+      padding: 6px;
+      border-radius: 4px;
+      border: none;
+      font-size: 14px;
+    }
+
+
+    nav {
+      background-color: var(--dark);
+      color: white;
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding-top: 60px;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+
+    nav a {
+      color: white;
+      padding: 14px 20px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    nav a:hover {
+      background-color: #555;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 900;
+    }
+
+    .hero {
+      flex: 1;
+      padding: 30px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .container {
+      max-width: 900px;
+      background: #fff;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+      color: var(--dark);
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    section {
+      margin-bottom: 30px;
+    }
+
+    .steps {
+      padding-left: 20px;
+    }
+
+    .steps li {
+      margin-bottom: 10px;
+    }
+
+    .contact-box {
+      background-color: var(--green);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .contact-box p {
+      margin: 5px 0;
+    }
+
+    .contact-box a {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background-color: var(--dark);
+      color: white;
+      font-size: 13px;
+    }
+
+    @media (max-width: 800px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      .overlay.show {
+        display: block;
+      }
+
+      nav.show {
+        left: 0;
+      }
+
+      nav a {
+        border-top: 1px solid #444;
+      }
+
+      .container {
+        padding: 20px;
+      }
+    }
+
+    @media (min-width: 801px) {
+      nav {
+        position: static;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: center;
+        padding: 0;
+        left: 0 !important;
+        gap: 24px;
+      }
+
+      nav a {
+        border: none;
+        justify-content: center;
+        padding: 14px 24px;
+      }
+
+      .overlay {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <h2 id="headerTitle">PAYG Solar System</h2>
+    <div class="language-selector">
+      <select id="lang" class="lang-select" onchange="setLanguage(this.value)">
+        <option value="en">EN</option>
+        <option value="sw">SW</option>
+      </select>
+    </div>
+  </header>
+
+  <div class="overlay" onclick="closeMenu()"></div>
+
+  <nav id="sidebar">
+    <a href="home.html" id="navHome">🏠 Home</a>
+    <a href="index.html" id="navDashboard">📊 Dashboard</a>
+    <a href="generate.html" id="navGenerate">🔑 Generate Token</a>
+    <a href="chart.html" id="navChart">📈 Power Chart</a>
+    <a href="about.html" id="navAbout">ℹ️ About & Contact</a>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <h1 id="aboutTitle">About PAYG Solar System</h1>
+
+      <section>
+        <h2 id="whatTitle">📦 What is This Project?</h2>
+        <p id="whatDesc">This is an offline Pay-As-You-Go (PAYG) solar solution designed for small-scale microgrids or home use in remote areas. It enables users to top up energy using tokens generated locally without internet access.</p>
+      </section>
+
+      <section>
+        <h2 id="howTitle">⚙️ How the System Works</h2>
+        <ol class="steps" id="stepsList"></ol>
+      </section>
+
+      <section>
+        <h2 id="contactTitle">📞 Contact & Support</h2>
+        <div class="contact-box">
+          <p><strong>Name:</strong> SolarGrid Labs</p>
+          <p><strong>Email:</strong> <a href="mailto:info@solargrid.local">info@solargrid.local</a></p>
+          <p><strong>Phone:</strong> +254 740504734</p>
+          <p><strong>Website:</strong> <a href="http://192.168.4.1">192.168.4.1</a></p>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <footer id="footerText">
+    &copy; 2025 PAYG Solar System. All rights reserved.
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('sidebar').classList.toggle('show');
+      document.querySelector('.overlay').classList.toggle('show');
+    }
+
+    function closeMenu() {
+      document.getElementById('sidebar').classList.remove('show');
+      document.querySelector('.overlay').classList.remove('show');
+    }
+
+    const translations = {
+      en: {
+        headerTitle: "PAYG Solar System",
+        navHome: "🏠 Home",
+        navDashboard: "📊 Dashboard",
+        navGenerate: "🔑 Generate Token",
+        navChart: "📈 Power Chart",
+        navAbout: "ℹ️ About & Contact",
+        footerText: "© 2025 PAYG Solar System. All rights reserved.",
+        aboutTitle: "About PAYG Solar System",
+        whatTitle: "📦 What is This Project?",
+        whatDesc: "This is an offline Pay-As-You-Go (PAYG) solar solution designed for small-scale microgrids or home use in remote areas. It enables users to top up energy using tokens generated locally without internet access.",
+        howTitle: "⚙️ How the System Works",
+        contactTitle: "📞 Contact & Support",
+        stepsList: [
+          "User connects to the ESP8266's WiFi network (e.g. PAYG-SOLAR).",
+          "User visits 192.168.4.1 and navigates to Generate Token.",
+          "User enters name and payment amount (KES). ESP8266 generates a unique 8-digit token.",
+          "User enters this token on the dashboard to activate power.",
+          "Energy credit reduces over time based on load power usage (in watts).",
+          "User can monitor remaining credit and usage charts in real time."
+        ]
+      },
+      sw: {
+        headerTitle: "Mfumo wa Jua wa PAYG",
+        navHome: "🏠 Nyumbani",
+        navDashboard: "📊 Dashibodi",
+        navGenerate: "🔑 Tengeneza Tokeni",
+        navChart: "📈 Chati ya Umeme",
+        navAbout: "ℹ️ Kuhusu & Mawasiliano",
+        footerText: "© 2025 Mfumo wa PAYG Solar. Haki zote zimehifadhiwa.",
+        aboutTitle: "Kuhusu Mfumo wa PAYG Solar",
+        whatTitle: "📦 Mradi Huu Ni Nini?",
+        whatDesc: "Hii ni suluhisho ya nishati ya jua ya Pay-As-You-Go (PAYG) inayofanya kazi bila mtandao, iliyoundwa kwa ajili ya matumizi ya vijijini au microgrids ndogo. Inaruhusu watumiaji kuongeza nishati kwa kutumia tokeni zilizotengenezwa kwa ndani bila mtandao.",
+        howTitle: "⚙️ Jinsi Mfumo Unavyofanya Kazi",
+        contactTitle: "📞 Mawasiliano na Usaidizi",
+        stepsList: [
+          "Mtumiaji anaunganishwa na WiFi ya ESP8266 (mfano: PAYG-SOLAR).",
+          "Mtumiaji anatembelea 192.168.4.1 na kuchagua Generate Token.",
+          "Mtumiaji anaingiza jina na kiasi cha malipo (KES). ESP8266 hutengeneza tokeni ya kipekee ya tarakimu 8.",
+          "Mtumiaji anaingiza tokeni hiyo kwenye dashibodi kuwasha nguvu.",
+          "Salio la nishati hupungua kadri mzigo unavyotumia umeme (katika watts).",
+          "Mtumiaji anaweza kufuatilia salio na matumizi ya nishati kwa wakati halisi."
+        ]
+      }
+    };
+
+    function setLanguage(lang) {
+      const t = translations[lang];
+
+      document.getElementById("headerTitle").innerText = t.headerTitle;
+      document.getElementById("navHome").innerText = t.navHome;
+      document.getElementById("navDashboard").innerText = t.navDashboard;
+      document.getElementById("navGenerate").innerText = t.navGenerate;
+      document.getElementById("navChart").innerText = t.navChart;
+      document.getElementById("navAbout").innerText = t.navAbout;
+      document.getElementById("footerText").innerText = t.footerText;
+
+      document.getElementById("aboutTitle").innerText = t.aboutTitle;
+      document.getElementById("whatTitle").innerText = t.whatTitle;
+      document.getElementById("whatDesc").innerText = t.whatDesc;
+      document.getElementById("howTitle").innerText = t.howTitle;
+      document.getElementById("contactTitle").innerText = t.contactTitle;
+
+      const steps = document.getElementById("stepsList");
+      steps.innerHTML = "";
+      t.stepsList.forEach(step => {
+        const li = document.createElement("li");
+        li.textContent = step;
+        steps.appendChild(li);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      setLanguage("en");
+    });
+  </script>
+</body>
+</html>

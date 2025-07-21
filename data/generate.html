@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PAYG Solar | Generate</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="img/image2.jpg" type="image/png" />
+  <style>
+    :root {
+      --blue: #2196f3;
+      --green: #4CAF50;
+      --dark: #333;
+      --light: #f4f4f4;
+      --gray: #f7f7f7;
+      --error: #e53935;
+      --success: #43a047;
+      --text: #444;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--light);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: var(--green);
+      padding: 16px;
+      text-align: center;
+      color: white;
+      position: relative;
+      height: 80px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-toggle {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      font-size: 24px;
+      color: white;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: none;
+      z-index: 1100;
+    }
+
+    nav {
+      background-color: var(--dark);
+      color: white;
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding-top: 60px;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+
+    nav a {
+      color: white;
+      padding: 14px 20px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    nav a:hover {
+      background-color: #555;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 900;
+    }
+
+    .hero {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 20px;
+    }
+
+    .container {
+      background: white;
+      max-width: 500px;
+      width: 100%;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .container h2 {
+      margin-bottom: 10px;
+      color: var(--dark);
+      text-align: center;
+    }
+
+    .input-group {
+      margin-top: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    #token {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background-color: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    #token:hover {
+      background-color: #1976d2;
+    }
+
+    .result-box {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      display: none;
+    }
+
+    .result-box.success {
+      background: var(--success);
+      color: white;
+    }
+
+    .result-box.error {
+      background: var(--error);
+      color: white;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background-color: var(--dark);
+      color: white;
+      font-size: 13px;
+    }
+
+    .language-selector {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+    }
+    .language-selector select {
+      padding: 6px;
+      border-radius: 4px;
+      border: none;
+      font-size: 14px;
+    }
+
+    @media (max-width: 800px) {
+      .menu-toggle { display: block; }
+      .overlay.show { display: block; }
+      nav.show { left: 0; }
+      nav a { border-top: 1px solid #444; }
+    }
+
+    @media (min-width: 801px) {
+      nav {
+        position: static;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: center;
+        padding: 0;
+        left: 0 !important;
+        gap: 24px;
+      }
+
+      nav a {
+        border: none;
+        justify-content: center;
+        padding: 14px 24px;
+      }
+
+      .overlay {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <h2 data-i18n="header">PAYG Solar System</h2>
+    <div class="language-selector">
+      <select id="lang" class="lang-select" onchange="setLanguage(this.value)">
+        <option value="en">EN</option>
+        <option value="sw">SW</option>
+      </select>
+    </div>
+  </header>
+
+  <div class="overlay" onclick="closeMenu()"></div>
+
+  <nav id="sidebar">
+    <a href="home.html">🏠 <span data-i18n="nav.home">Home</span></a>
+    <a href="index.html">📊 <span data-i18n="nav.dashboard">Dashboard</span></a>
+    <a href="generate.html">🔑 <span data-i18n="nav.generate">Generate Token</span></a>
+    <a href="chart.html">📈 <span data-i18n="nav.chart">Power Chart</span></a>
+    <a href="about.html">ℹ️ <span data-i18n="nav.about">About & Contact</span></a>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <h2 data-i18n="form.title">Generate PAYG Token</h2>
+
+      <!-- <div class="input-group">
+        <label for="user" data-i18n="form.phone">Phone Number</label>
+        <input type="text" id="user" placeholder="e.g. 0712345678" />
+      </div> -->
+
+      <div class="input-group">
+        <label for="amount" data-i18n="form.amount">Amount (KES)</label>
+        <input type="number" id="amount" placeholder="e.g. 100" />
+      </div>
+
+      <button onclick="generateToken()" id="token" data-i18n="form.button">Generate Token</button>
+      <div id="result" class="result-box"></div>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2025 PAYG Solar. <span data-i18n="footer.note">Designed for remote, offline usage.</span>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('sidebar').classList.toggle('show');
+      document.querySelector('.overlay').classList.toggle('show');
+    }
+
+    function closeMenu() {
+      document.getElementById('sidebar').classList.remove('show');
+      document.querySelector('.overlay').classList.remove('show');
+    }
+
+    const translations = {
+      en: {
+        header: "PAYG Solar System",
+        nav: {
+          home: "Home",
+          dashboard: "Dashboard",
+          generate: "Generate Token",
+          chart: "Power Chart",
+          about: "About & Contact"
+        },
+        form: {
+          title: "Generate PAYG Token",
+          amount: "Amount (KES)",
+          button: "Generate Token",
+          invalid: "Please enter a valid amount.",
+          success: "✅ Token Generated",
+          failure: "❌ Failed to generate token.",
+          error: "❌ Error connecting to device."
+        },
+        footer: {
+          note: "Designed for remote, offline usage."
+        }
+      },
+      sw: {
+        header: "Mfumo wa PAYG Solar",
+        nav: {
+          home: "Nyumbani",
+          dashboard: "Dashibodi",
+          generate: "Tengeneza Token",
+          chart: "Chati ya Umeme",
+          about: "Kuhusu & Mawasiliano"
+        },
+        form: {
+          title: "Tengeneza Token ya PAYG",
+          amount: "Kiasi (KES)",
+          button: "Tengeneza Token",
+          invalid: "Tafadhali weka kiasi halali.",
+          success: "✅ Token Imetengenezwa",
+          failure: "❌ Haikuweza kutengeneza token.",
+          error: "❌ Hitilafu kuwasiliana na kifaa."
+        },
+        footer: {
+          note: "Imeundwa kwa matumizi ya mbali bila mtandao."
+        }
+      }
+    };
+
+    let currentLang = localStorage.getItem("lang") || "en";
+    const phone = localStorage.getItem("userPhone");
+
+    // Redirect if no phone stored (not logged in)
+    if (!phone) {
+      window.location.href = "login.html";
+    }
+
+    document.getElementById("lang").value = currentLang;
+
+    function t(key) {
+      const keys = key.split(".");
+      return keys.reduce((obj, k) => obj?.[k], translations[currentLang]) || key;
+    }
+
+    function applyTranslations() {
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        el.innerHTML = t(key);
+      });
+    }
+
+    document.getElementById("lang").addEventListener("change", (e) => {
+      currentLang = e.target.value;
+      localStorage.setItem("lang", currentLang);
+      applyTranslations();
+    });
+
+    applyTranslations();
+
+    async function generateToken() {
+      const amount = parseFloat(document.getElementById('amount').value.trim());
+      const resultBox = document.getElementById('result');
+      resultBox.style.display = 'none';
+      resultBox.className = 'result-box';
+
+      if (isNaN(amount) || amount <= 0) {
+        showMessage(t('form.invalid'), false);
+        return;
+      }
+
+      try {
+        const response = await fetch('/generate-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone, amount })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showMessage(`${t('form.success')}: <strong>${result.token}</strong>`, true);
+        } else {
+          showMessage(t('form.failure'), false);
+        }
+      } catch (err) {
+        console.error("Error generating token:", err);
+        showMessage(t('form.error'), false);
+      }
+    }
+
+    function showMessage(message, isSuccess) {
+      const resultBox = document.getElementById('result');
+      resultBox.innerHTML = message;
+      resultBox.classList.add(isSuccess ? 'success' : 'error');
+      resultBox.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

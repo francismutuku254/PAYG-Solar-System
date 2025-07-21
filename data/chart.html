@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PAYG Solar | Chart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="/chart.min.js"></script>
+  <link rel="icon" href="img/image2.jpg" type="image/png">
+  <style>
+    :root {
+      --green: #4CAF50;
+      --dark: #333;
+      --light: #f4f4f4;
+      --text: #444;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--light);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background-color: var(--green);
+      padding: 16px;
+      color: white;
+      text-align: center;
+      position: relative;
+      height: 80px;
+      align-items: center;
+      justify-content: center;
+    }
+    .menu-toggle {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      font-size: 24px;
+      color: white;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: none;
+      z-index: 1100;
+    }
+    .language-selector {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+    }
+    .language-selector select {
+      padding: 6px;
+      border-radius: 4px;
+      border: none;
+      font-size: 14px;
+    }
+    nav {
+      background-color: var(--dark);
+      color: white;
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding-top: 60px;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+    nav a {
+      color: white;
+      padding: 14px 20px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    nav a:hover { background-color: #555; }
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 900;
+    }
+    .hero {
+      flex: 1;
+      padding: 30px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 800px;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    #chart-title h2 {
+      text-align: center;
+      color: var(--dark);
+      margin-bottom: 20px;
+    }
+    canvas {
+      max-width: 100%;
+      height: auto;
+    }
+    footer {
+      text-align: center;
+      padding: 15px;
+      background-color: var(--dark);
+      color: white;
+      font-size: 13px;
+    }
+
+    @media (max-width: 800px) {
+      .menu-toggle { display: block; }
+      .overlay.show { display: block; }
+      nav.show { left: 0; }
+      nav a { border-top: 1px solid #444; }
+    }
+    @media (min-width: 801px) {
+      nav {
+        position: static;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: center;
+        padding: 0;
+        left: 0 !important;
+        gap: 24px;
+      }
+      nav a {
+        border: none;
+        justify-content: center;
+        padding: 14px 24px;
+      }
+      .overlay { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <h2 id="header-title">PAYG Solar System</h2>
+    <div class="language-selector">
+      <select id="lang" onchange="setLanguage(this.value)">
+        <option value="en">EN</option>
+        <option value="sw">SW</option>
+      </select>
+    </div>
+  </header>
+
+  <div class="overlay" onclick="closeMenu()"></div>
+
+  <nav id="sidebar">
+    <a href="home.html" id="nav-home">🏠 Home</a>
+    <a href="index.html" id="nav-dashboard">📊 Dashboard</a>
+    <a href="generate.html" id="nav-generate">🔑 Generate Token</a>
+    <a href="chart.html" id="nav-chart">📈 Power Chart</a>
+    <a href="about.html" id="nav-about">ℹ️ About & Contact</a>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <h2 id="chart-title">Live Power Usage Chart</h2>
+      <canvas id="creditChart" height="150"></canvas>
+    </div>
+  </section>
+
+  <footer id="footer-text">
+    © 2025 PAYG Solar | Data updates every 5 seconds
+  </footer>
+
+
+
+<script>
+   function toggleMenu() {
+      document.getElementById('sidebar').classList.toggle('show');
+      document.querySelector('.overlay').classList.toggle('show');
+    }
+
+    function closeMenu() {
+      document.getElementById('sidebar').classList.remove('show');
+      document.querySelector('.overlay').classList.remove('show');
+    }
+  let currentLang = localStorage.getItem("lang") || 'en';
+  const translations = {
+    en: {
+      header: 'PAYG Solar System',
+      navHome: '🏠 Home',
+      navDashboard: '📊 Dashboard',
+      navGenerate: '🔑 Generate Token',
+      navChart: '📈 Power Chart',
+      navAbout: 'ℹ️ About & Contact',
+      chartTitle: 'Live Power Usage Chart',
+      creditLabel: 'Remaining Credit (kWh)',
+      xAxis: 'Time',
+      yAxis: 'Credit (kWh)',
+      footer: '© 2025 PAYG Solar | Data updates every 5 seconds',
+      noUser: 'No user logged in. Please return to login.'
+    },
+    sw: {
+      header: 'Mfumo wa PAYG Solar',
+      navHome: '🏠 Nyumbani',
+      navDashboard: '📊 Dashibodi',
+      navGenerate: '🔑 Tengeneza Tokeni',
+      navChart: '📈 Chati ya Umeme',
+      navAbout: 'ℹ️ Kuhusu & Mawasiliano',
+      chartTitle: 'Chati ya Matumizi ya Nguvu',
+      creditLabel: 'Salio la Umeme (kWh)',
+      xAxis: 'Muda',
+      yAxis: 'Salio (kWh)',
+      footer: '© 2025 PAYG Solar | Taarifa hubadilika kila sekunde 5',
+      noUser: 'Hakuna mtumiaji ameingia. Tafadhali rudi kuingia.'
+    }
+  };
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem("lang", lang);
+    const t = translations[lang];
+
+    document.getElementById('header-title').textContent = t.header;
+    document.getElementById('nav-home').textContent = t.navHome;
+    document.getElementById('nav-dashboard').textContent = t.navDashboard;
+    document.getElementById('nav-generate').textContent = t.navGenerate;
+    document.getElementById('nav-chart').textContent = t.navChart;
+    document.getElementById('nav-about').textContent = t.navAbout;
+    document.getElementById('chart-title').textContent = t.chartTitle;
+    document.getElementById('footer-text').textContent = t.footer;
+
+    chart.data.datasets[0].label = t.creditLabel;
+    chart.options.scales.x.title.text = t.xAxis;
+    chart.options.scales.y.title.text = t.yAxis;
+    chart.update();
+  }
+
+  // Get user phone number from localStorage
+  const userPhone = localStorage.getItem("userPhone");
+
+  if (!userPhone) {
+    alert(translations[currentLang].noUser);
+    window.location.href = "home.html"; // redirect to login/home
+  }
+
+  // Chart init
+  const ctx = document.getElementById('creditChart').getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: translations[currentLang].creditLabel,
+        data: [],
+        borderColor: '#4CAF50',
+        backgroundColor: 'rgba(76, 175, 80, 0.2)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 3
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: translations[currentLang].xAxis,
+            color: '#555'
+          }
+        },
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: translations[currentLang].yAxis,
+            color: '#555'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: { color: '#333' }
+        }
+      }
+    }
+  });
+
+  async function updateChart() {
+  try {
+    const res = await fetch(`/status.json?phone=${userPhone}`);
+    const data = await res.json();
+
+    if (data.error) return;
+
+    const credit = parseFloat(data.credit).toFixed(3);
+    const time = new Date().toLocaleTimeString();
+
+    chart.data.labels.push(time);
+    chart.data.datasets[0].data.push(credit);
+
+    if (chart.data.labels.length > 20) {
+      chart.data.labels.shift();
+      chart.data.datasets[0].data.shift();
+    }
+
+    chart.update();
+  } catch (err) {
+    console.error('Failed to fetch credit status:', err);
+  }
+}
+
+
+  // Setup language
+  document.getElementById("lang").value = currentLang;
+  document.getElementById("lang").addEventListener("change", (e) => {
+    setLanguage(e.target.value);
+  });
+
+  setLanguage(currentLang);
+  updateChart();
+  setInterval(updateChart, 5000);
+</script>
+
+</body>
+</html>

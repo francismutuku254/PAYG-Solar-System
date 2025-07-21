@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PAYG Solar | Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="img/image2.jpg" type="image/png">
+  <style>
+    :root {
+      --green: #4CAF50;
+      --red: #f44336;
+      --gray: #f0f0f0;
+      --dark: #333;
+      --text: #444;
+      --light: #f4f4f4;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--light);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* justify-content: space-between; */
+      background-color: var(--green);
+      padding: 16px;
+      position: relative;
+      color: white;
+      flex-wrap: wrap;
+      height: 80px;
+    }
+
+    .menu-toggle {
+      font-size: 24px;
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      display: none;
+      z-index: 1100;
+    }
+
+    header h2 {
+      flex: 1;
+      text-align: center;
+      font-size: 1.5em;
+    }
+
+    .language-selector {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+    }
+    .language-selector select {
+      padding: 6px;
+      border-radius: 4px;
+      border: none;
+      font-size: 14px;
+    }
+
+    nav {
+      background-color: var(--dark);
+      color: white;
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding-top: 60px;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+
+    nav a {
+      color: white;
+      padding: 14px 20px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+
+    nav a:hover {
+      background-color: #555;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.4);
+      z-index: 900;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 20px;
+    }
+
+    .dashboard {
+      background: white;
+      max-width: 600px;
+      width: 100%;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #title h2 {
+      text-align: center;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+
+    .status-card {
+      padding: 15px;
+      border-radius: 10px;
+      color: white;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .status-on {
+      background-color: var(--green);
+    }
+
+    .status-off {
+      background-color: var(--red);
+    }
+
+    .credit {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    #submit {
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+      background-color: var(--green);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    #submit:hover {
+      background-color: #388e3c;
+    }
+
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background-color: var(--dark);
+      color: white;
+      font-size: 13px;
+    }
+
+    @media (max-width: 800px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      nav.show {
+        left: 0;
+      }
+
+      .overlay.show {
+        display: block;
+      }
+
+      nav a {
+        border-top: 1px solid #444;
+      }
+
+      .language-selector {
+        position: static;
+        margin-top: 10px;
+        text-align: right;
+        width: 100%;
+      }
+    }
+
+    @media (min-width: 801px) {
+      nav {
+        position: static;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: center;
+        padding: 0;
+        left: 0 !important;
+        gap: 24px;
+      }
+
+      nav a {
+        border: none;
+        justify-content: center;
+        padding: 14px 24px;
+      }
+
+      .overlay {
+        display: none !important;
+      }
+    }
+    .language-selector {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+    }
+
+    .lang-select {
+      padding: 6px;
+      border-radius: 4px;
+      border: none;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <h2 id="header-title">PAYG Solar System</h2>
+    <div class="language-selector">
+      <select id="lang" class="lang-select" onchange="setLanguage(this.value)">
+        <option value="en">EN</option>
+        <option value="sw">SW</option>
+      </select>
+    </div>
+  </header>
+
+  <div class="overlay" onclick="closeMenu()"></div>
+
+  <nav id="sidebar">
+    <a href="home.html" id="nav-home">🏠 Home</a>
+    <a href="index.html" id="nav-dashboard">📊 Dashboard</a>
+    <a href="generate.html" id="nav-generate">🔑 Generate Token</a>
+    <a href="chart.html" id="nav-chart">📈 Power Chart</a>
+    <a href="about.html" id="nav-about">ℹ️ About & Contact</a>
+  </nav>
+
+  <main>
+    <div class="dashboard">
+      <h2 id="title">PAYG Solar System</h2>
+
+      <div id="status" class="status-card status-off">
+        <div id="power-status"><strong>Power Status:</strong> OFF</div>
+        <div class="credit" id="credit-label"><strong>Remaining Credit:</strong> 0.00 kWh</div>
+      </div>
+
+      <label for="token" id="enter-token-label">Enter Token</label>
+      <input type="text" id="token" maxlength="10" placeholder="e.g. 83729104" />
+      <button onclick="submitToken()" id="submit">Submit Token</button>
+    </div>
+  </main>
+
+  <footer id="footer-text">
+    &copy; 2025 PAYG Solar. Designed for remote, offline usage.
+  </footer>
+
+
+<script>
+  function toggleMenu() {
+    document.getElementById('sidebar').classList.toggle('show');
+    document.querySelector('.overlay').classList.toggle('show');
+  }
+
+  function closeMenu() {
+    document.getElementById('sidebar').classList.remove('show');
+    document.querySelector('.overlay').classList.remove('show');
+  }
+
+  let currentLang = 'en';
+  let currentTranslations = {};
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    const t = {
+      en: {
+        header: 'PAYG Solar System',
+        title: 'PAYG Solar System',
+        enterToken: 'Enter Token',
+        submit: 'Submit Token',
+        navHome: '🏠 Home',
+        navDashboard: '📊 Dashboard',
+        navGenerate: '🔑 Generate Token',
+        navChart: '📈 Power Chart',
+        navAbout: 'ℹ️ About & Contact',
+        powerStatus: 'Power Status:',
+        remainingCredit: 'Remaining Credit:',
+        placeholder: 'e.g. 83729104',
+        footer: '© 2025 PAYG Solar. Designed for remote, offline usage.',
+        alerts: {
+          enterToken: 'Please enter a token.',
+          verifying: 'Verifying...',
+          accepted: 'Token accepted!',
+          invalid: 'Invalid token.',
+          error: 'Network error.',
+          submit: 'Submit Token'
+        }
+      },
+      sw: {
+        header: 'Mfumo wa PAYG Solar',
+        title: 'Mfumo wa PAYG Solar',
+        enterToken: 'Weka Tokeni',
+        submit: 'Wasilisha Tokeni',
+        navHome: '🏠 Nyumbani',
+        navDashboard: '📊 Dashibodi',
+        navGenerate: '🔑 Tengeneza Tokeni',
+        navChart: '📈 Chati ya Umeme',
+        navAbout: 'ℹ️ Kuhusu & Mawasiliano',
+        powerStatus: 'Hali ya Umeme:',
+        remainingCredit: 'Salio la Umeme:',
+        placeholder: 'mf. 83729104',
+        footer: '© 2025 PAYG Solar. Imeundwa kwa matumizi ya mbali bila mtandao.',
+        alerts: {
+          enterToken: 'Tafadhali weka tokeni.',
+          verifying: 'Inatuma...',
+          accepted: 'Tokeni imekubaliwa!',
+          invalid: 'Tokeni si sahihi.',
+          error: 'Hitilafu ya mtandao.',
+          submit: 'Wasilisha Tokeni'
+        }
+      }
+    };
+
+    const tr = t[lang];
+    document.getElementById('header-title').textContent = tr.header;
+    document.getElementById('title').textContent = tr.title;
+    document.getElementById('enter-token-label').textContent = tr.enterToken;
+    document.getElementById('submit').textContent = tr.submit;
+    document.getElementById('nav-home').textContent = tr.navHome;
+    document.getElementById('nav-dashboard').textContent = tr.navDashboard;
+    document.getElementById('nav-generate').textContent = tr.navGenerate;
+    document.getElementById('nav-chart').textContent = tr.navChart;
+    document.getElementById('nav-about').textContent = tr.navAbout;
+    document.getElementById('token').placeholder = tr.placeholder;
+    document.getElementById('footer-text').textContent = tr.footer;
+    currentTranslations = tr;
+  }
+
+  // Fetch power status for the current user
+  async function fetchStatus() {
+    const phone = localStorage.getItem("userPhone");
+    if (!phone) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    try {
+      const res = await fetch(`/status.json?phone=${encodeURIComponent(phone)}`);
+      const data = await res.json();
+
+      const statusDiv = document.getElementById('status');
+      const powerStatus = document.getElementById('power-status');
+      const creditEl = document.getElementById('credit-label');
+
+      if (data.power === 'ON') {
+        statusDiv.classList.remove('status-off');
+        statusDiv.classList.add('status-on');
+      } else {
+        statusDiv.classList.remove('status-on');
+        statusDiv.classList.add('status-off');
+      }
+
+      powerStatus.innerHTML = `<strong>${currentTranslations.powerStatus}</strong> ${data.power}`;
+      creditEl.innerHTML = `<strong>${currentTranslations.remainingCredit}</strong> ${parseFloat(data.credit).toFixed(2)} kWh`;
+
+    } catch (err) {
+      console.error('Status fetch failed:', err);
+    }
+  }
+
+  // Submit token for the current user
+  async function submitToken() {
+    const phone = localStorage.getItem("userPhone");
+    if (!phone) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    const tokenInput = document.getElementById('token');
+    const token = tokenInput.value.trim();
+    const btn = document.getElementById('submit');
+    const alerts = currentTranslations.alerts;
+
+    if (!token) {
+      alert(alerts.enterToken);
+      return;
+    }
+
+    btn.classList.add('loading');
+    btn.textContent = alerts.verifying;
+
+    try {
+      const res = await fetch('/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, phone })  // ✅ correct param name
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+        alert(alerts.accepted);
+        fetchStatus();
+      } else {
+        alert(alerts.invalid);
+      }
+
+    } catch (err) {
+      alert(alerts.error);
+    }
+
+    btn.classList.remove('loading');
+    btn.textContent = alerts.submit;
+    tokenInput.value = '';
+  }
+
+  // Initialize page
+  setLanguage('en');  // Default language
+  fetchStatus();
+  setInterval(fetchStatus, 2000);
+</script>
+
+
+</body>
+</html>
